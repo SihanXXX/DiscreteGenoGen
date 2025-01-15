@@ -27,6 +27,12 @@ def gwas(geno_df, pheno_array):
     for snp in geno_df.columns:
         snp_data = geno_df[snp].values
 
+        # Check if the SNP column is constant (no variation)
+        if np.all(snp_data == snp_data[0]):
+            # Assign non-significant p-value when constant
+            results.append({"SNP": snp, "Beta": 0, "P-value": 1.0})  # Non-significant p-value
+            continue
+
         # Adding intercept for regression
         X = sm.add_constant(snp_data)  # [1, SNP value] for regression
         y = pheno_array
@@ -35,8 +41,13 @@ def gwas(geno_df, pheno_array):
         model = sm.OLS(y, X).fit()
 
         # Extract effect size and p-value
-        beta = model.params[1]  # SNP effect size
-        p_value = model.pvalues[1]  # P-value for SNP association
+        try:
+            beta = model.params[1]  # SNP effect size
+            p_value = model.pvalues[1]  # P-value for SNP association
+            
+        except IndexError:
+            beta = 0
+            p_value = 1.0  # Assign non-significant p-value
 
         # Store results
         results.append({"SNP": snp, "Beta": beta, "P-value": p_value})
