@@ -99,8 +99,62 @@ def wasserstein_distance (df1, df2):
     wasserstein_distance = ot.emd2(weights_df1, weights_df2, cost_matrix)
 
     return wasserstein_distance
-
-
     
 
+def geno_PCA_32PC (df1, df2, label1, label2, save_path):
+    """
+    Perform PCA on the combined dataset and plot PC1 vs PC2, PC3 vs PC4, ..., PC31 vs PC32.
+    
+    ----
+    Parameters:
+        df1 (dataframe): first genotype dataframe
+        df2 (dataframe): second genotype dataframe
+        label1 (string): label of the df1 to be displayed in the 2d PCA plot
+        label2 (string): label of the df2 to be displayed in the 2d PCA plot
+        save_path (string): the path where the pca plot will be saved
+        
+    Returns:
+        None: Displays the 4x4 grid of PCA plots.
+    """
+    # Combine real and artificial data for PCA
+    combined_data = np.vstack([df1.to_numpy(), df2.to_numpy()])
+    pca = PCA(n_components=32)
+    combined_pca = pca.fit_transform(combined_data)
+
+    # Split the PCA-transformed data back into df1 and df2
+    n_df1 = df1.shape[0]
+    df1_pca = combined_pca[:n_df1, :]
+    df2_pca = combined_pca[n_df1:, :]
+
+    # Create a 4x4 grid for plotting
+    fig, axes = plt.subplots(4, 4, figsize=(16, 16))
+
+    # Plot PC1 vs PC2, PC3 vs PC4, ..., PC31 vs PC32
+    pc_idx = 0
+    for i in range(4):
+        for j in range(4):
+            ax = axes[i, j]
+
+            # Select the current pair of PCs
+            pc_x = pc_idx
+            pc_y = pc_idx + 1
+
+            # Scatter plot for real and artificial data
+            ax.scatter(df1_pca[:, pc_x], df1_pca[:, pc_y], alpha=0.3, label=label1, color="#008C90", s=10)
+            ax.scatter(df2_pca[:, pc_x], df2_pca[:, pc_y], alpha=0.3, label=label2, color="#D0FF00", s=10)
+
+            # Titles and labels
+            ax.set_title(f"PC{pc_x + 1} vs PC{pc_y + 1}")
+            ax.set_xlabel(f"PC{pc_x + 1}")
+            ax.set_ylabel(f"PC{pc_y + 1}")
+
+            pc_idx += 2 
+
+            # Add label on the first plot
+            if i == 0 and j == 0:
+                ax.legend(loc="upper right", fontsize=12)
+
+    plt.tight_layout()
+    plt.savefig(save_path, format="png")
+    plt.show()
     
