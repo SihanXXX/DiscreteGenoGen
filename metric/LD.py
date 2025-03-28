@@ -68,7 +68,8 @@ def plot_LD(df1, df2, save_path_img):
         cbar_kws={'label': 'LD'})
     
     # plt.title("LD Heatmap: Real (below diagonal) vs Fake (above diagonal)")
-    plt.savefig(save_path_img, format="png")
+    # plt.savefig(save_path_img, format="png")
+    plt.savefig(save_path_img, format='eps', dpi=600, bbox_inches='tight')
     plt.show()
 
 
@@ -145,7 +146,8 @@ def plot_LD_decay(df1, df2, positions, distance_threshold, min_dist, max_dist, l
     plt.grid(alpha=0.5, linestyle='--')
     plt.legend(fontsize=12, loc='upper center', bbox_to_anchor=(0.5, 0.99), ncol=2, frameon=True)
     plt.tight_layout()
-    plt.savefig(save_path_img, format="png")
+    # plt.savefig(save_path_img, format="png")
+    plt.savefig(save_path_img, format='eps', dpi=600, bbox_inches='tight')
     plt.show()
 
 

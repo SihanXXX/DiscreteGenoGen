@@ -108,7 +108,8 @@ def plot_gwas(geno_df, pheno_array, chrom_dict, save_path_img):
     # plt.title("Manhattan Plot of GWAS Results", fontsize=14)
     plt.legend(loc="upper right", fontsize=10)
     plt.tight_layout()
-    plt.savefig(save_path_img, format="png")
+    # plt.savefig(save_path_img, format="png")
+    plt.savefig(save_path_img, format='eps', dpi=600, bbox_inches='tight')
     plt.show()
 
 
@@ -133,10 +134,17 @@ def plot_compare_gwas(geno_df_1, pheno_array_1, geno_df_2, pheno_array_2, chrom_
     # Perform GWAS
     gwas_results_1 = gwas(geno_df_1, pheno_array_1)
     p_values_1 = gwas_results_1['P-value']
+    beta_1 = gwas_results_1['Beta']
     log_p_values_1 = -np.log10(p_values_1)
     gwas_results_2 = gwas(geno_df_2, pheno_array_2)
     p_values_2 = gwas_results_2['P-value']
+    beta_2 = gwas_results_2['Beta']
     log_p_values_2 = -np.log10(p_values_2)
+
+    # Calculate the correlation between beta value
+    df = pd.DataFrame({"Beta1": beta_1, "Beta2": beta_2})
+    corr_beta = df["Beta1"].corr(df["Beta2"])
+    print("Pearson correlation between Beta:", corr_beta)
 
     # Set colors for chromosomes
     chrom_colors_1 = ['#17becf', '#9edae5']
@@ -203,8 +211,8 @@ def plot_compare_gwas(geno_df_1, pheno_array_1, geno_df_2, pheno_array_2, chrom_
     )
     # plt.title("Comparison of Two GWAS Results", fontsize=14)
     plt.tight_layout()
-    plt.savefig(save_path_img, format="png")
+    # plt.savefig(save_path_img, format="png")
+    plt.savefig(save_path_img, format='eps', dpi=600, bbox_inches='tight')
     plt.show()
 
-
-
+    return corr_beta

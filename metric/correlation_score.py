@@ -1,5 +1,5 @@
 """
-The idea of correlation score is to compute a Gamma correlation coefficient that compares the correlation structures of two genotype matrices
+The idea of correlation score is to compute a Gamma pearson correlation coefficient that compares the correlation structures of two genotype matrices
 
 Improved from original code:
 -----

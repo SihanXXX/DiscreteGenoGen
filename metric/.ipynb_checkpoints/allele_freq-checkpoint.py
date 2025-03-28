@@ -64,7 +64,8 @@ def plot_allele_freq(df1, df2, xlabel, ylabel, save_path_img):
     plt.ylim(0, 1)
     
     # Save the plot to the specified file path
-    plt.savefig(save_path_img, format="png")
+    # plt.savefig(save_path_img, format="png")
+    plt.savefig(save_path_img, format='eps', dpi=600, bbox_inches='tight')
     
     # Display the plot
     plt.show()
