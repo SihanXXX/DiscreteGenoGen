@@ -69,7 +69,8 @@ def plot_LD(df1, df2, save_path_img):
     
     # plt.title("LD Heatmap: Real (below diagonal) vs Fake (above diagonal)")
     # plt.savefig(save_path_img, format="png")
-    plt.savefig(save_path_img, format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img+".eps", format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img+".pdf", format='pdf', dpi=600, bbox_inches='tight')
     plt.show()
 
 
@@ -108,6 +109,15 @@ def plot_LD_decay(df1, df2, positions, distance_threshold, min_dist, max_dist, l
     filtered_ld_1 = ld_df1[distances <= distance_threshold]
     filtered_ld_2 = ld_df2[distances <= distance_threshold]
 
+    # Remove NaN LD values (and align distances accordingly)
+    valid_mask_1 = ~np.isnan(filtered_ld_1)
+    filtered_distances_1 = filtered_distances[valid_mask_1]
+    filtered_ld_1 = filtered_ld_1[valid_mask_1]
+
+    valid_mask_2 = ~np.isnan(filtered_ld_2)
+    filtered_distances_2 = filtered_distances[valid_mask_2]
+    filtered_ld_2 = filtered_ld_2[valid_mask_2]
+
     # Plot the scatter plot
     plt.figure(figsize=(10, 8))
 
@@ -115,26 +125,26 @@ def plot_LD_decay(df1, df2, positions, distance_threshold, min_dist, max_dist, l
     bins = np.logspace(np.log10(min_dist), np.log10(max_dist), 50)
 
     # Plot for df1
-    bin_means_1, bin_edges_1, _ = binned_statistic(filtered_distances, filtered_ld_1, statistic='mean', bins=bins)
+    bin_means_1, bin_edges_1, _ = binned_statistic(filtered_distances_1, filtered_ld_1, statistic='mean', bins=bins)
     # Scatter plot
-    plt.scatter(filtered_distances, filtered_ld_1, alpha=0.2, color='#007F85', label=label1, s=10)
+    plt.scatter(filtered_distances_1, filtered_ld_1, alpha=0.2, color='#1f77b4', label=label1, s=10)
     # Add a line for binned means
-    bin_centers_1 = 0.5 * (bin_edges_1[:-1] + bin_edges_1[1:])  # Calculate bin centers
-    plt.plot(bin_centers_1, bin_means_1, color='#FF6F43', linewidth=2, label='Mean LD for '+label1)
-    # Calculate standard error for each bin
-    bin_sems_1, _, _ = binned_statistic(filtered_distances, filtered_ld_1, statistic=sem, bins=bins)
-    plt.fill_between(bin_centers_1, bin_means_1 - bin_sems_1, bin_means_1 + bin_sems_1, color='#FF6F43', alpha=0.3)
+    bin_centers_1 = 0.5 * (bin_edges_1[:-1] + bin_edges_1[1:])
+    plt.plot(bin_centers_1, bin_means_1, color='#1f77b4', linewidth=2, label='Mean LD for ' + label1)
+    # Standard error shading
+    bin_sems_1, _, _ = binned_statistic(filtered_distances_1, filtered_ld_1, statistic=sem, bins=bins)
+    plt.fill_between(bin_centers_1, bin_means_1 - bin_sems_1, bin_means_1 + bin_sems_1, color='#1f77b4', alpha=0.2)
 
     # Plot for df2
-    bin_means_2, bin_edges_2, _ = binned_statistic(filtered_distances, filtered_ld_2, statistic='mean', bins=bins)
-    # Scatter plot 
-    plt.scatter(filtered_distances, filtered_ld_2, alpha=0.2, color='#8A2BE2', label=label2, s=10)
+    bin_means_2, bin_edges_2, _ = binned_statistic(filtered_distances_2, filtered_ld_2, statistic='mean', bins=bins)
+    # Scatter plot
+    plt.scatter(filtered_distances_2, filtered_ld_2, alpha=0.2, color='#ff7f0e', label=label2, s=10)
     # Add a line for binned means
-    bin_centers_2 = 0.5 * (bin_edges_2[:-1] + bin_edges_2[1:])  # Calculate bin centers
-    plt.plot(bin_centers_2, bin_means_2, color='#FFC20A', linewidth=2, label='Mean LD for '+label2)
-    # Calculate standard error for each bin
-    bin_sems_2, _, _ = binned_statistic(filtered_distances, filtered_ld_2, statistic=sem, bins=bins)
-    plt.fill_between(bin_centers_2, bin_means_2 - bin_sems_2, bin_means_2 + bin_sems_2, color='#FF6F43', alpha=0.3)
+    bin_centers_2 = 0.5 * (bin_edges_2[:-1] + bin_edges_2[1:])
+    plt.plot(bin_centers_2, bin_means_2, color='#ff7f0e', linewidth=2, label='Mean LD for ' + label2)
+    # Standard error shading
+    bin_sems_2, _, _ = binned_statistic(filtered_distances_2, filtered_ld_2, statistic=sem, bins=bins)
+    plt.fill_between(bin_centers_2, bin_means_2 - bin_sems_2, bin_means_2 + bin_sems_2, color='#ff7f0e', alpha=0.2)
 
     # Beautify the plot
     plt.xscale('log')  # Logarithmic scale for distances
@@ -147,7 +157,8 @@ def plot_LD_decay(df1, df2, positions, distance_threshold, min_dist, max_dist, l
     plt.legend(fontsize=12, loc='upper center', bbox_to_anchor=(0.5, 0.99), ncol=2, frameon=True)
     plt.tight_layout()
     # plt.savefig(save_path_img, format="png")
-    plt.savefig(save_path_img, format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img+".eps", format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img+".pdf", format='pdf', dpi=600, bbox_inches='tight')
     plt.show()
 
 

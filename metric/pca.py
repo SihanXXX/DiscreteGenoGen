@@ -35,7 +35,8 @@ def geno_PCA (df1, df2, label1, label2, save_path):
     plt.ylabel('PC2', fontsize=12, color="#000000")
     plt.legend()
     # plt.savefig(save_path, format="png")
-    plt.savefig(save_path, format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path+".eps", format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path+".pdf", format='pdf', dpi=600, bbox_inches='tight')
     plt.show()
 
 
@@ -78,7 +79,8 @@ def cumu_var (df1, df2, label1, label2, nb_pc, save_path):
     plt.legend() 
     plt.grid()
     # plt.savefig(save_path, format="png")
-    plt.savefig(save_path, format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path+".eps", format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path+".pdf", format='pdf', dpi=600, bbox_inches='tight')
     plt.show()
 
     return wasserstein_distance(pca_df1_result, pca_df2_result)
@@ -158,6 +160,7 @@ def geno_PCA_32PC (df1, df2, label1, label2, save_path):
 
     plt.tight_layout()
     # plt.savefig(save_path, format="png")
-    plt.savefig(save_path, format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path+".eps", format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path+".pdf", format='pdf', dpi=600, bbox_inches='tight')
     plt.show()
     

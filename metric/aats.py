@@ -112,5 +112,6 @@ def plot_aats(aats_scores, label1, label2, save_path):
     plt.tight_layout()
     plt.legend() 
     # plt.savefig(save_path, format="png")
-    plt.savefig(save_path, format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path+".eps", format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path+".pdf", format='pdf', dpi=600, bbox_inches='tight')
     plt.show()

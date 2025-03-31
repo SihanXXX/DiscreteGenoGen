@@ -57,9 +57,9 @@ def plot_geno_freq(df1, df2, xlabel, ylabel, save_path_img):
 
     # Scatter plot
     plt.figure(figsize=(10, 8))
-    plt.scatter(df1_het, df2_het, alpha=0.5, color="#008C90", label="Heterozygosity Rate")
-    plt.scatter(df1_homo_alter, df2_homo_alter, alpha=0.5, color="#800080", label="Homozygosity Rate for alternative allel")
-    plt.scatter(df1_homo_ref, df2_homo_ref, alpha=0.5, color="#FF4500", label="Homozygosity Rate for reference allel")
+    plt.scatter(df1_het, df2_het, alpha=0.4, color="#008C90", label="Heterozygosity Rate")
+    plt.scatter(df1_homo_alter, df2_homo_alter, alpha=0.4, color="#800080", label="Homozygosity Rate for alternative allel")
+    plt.scatter(df1_homo_ref, df2_homo_ref, alpha=0.4, color="#FF4500", label="Homozygosity Rate for reference allel")
     plt.plot([0, 1], [0, 1], color="#FF6F43", linestyle='--', label='y = x (Ideal Match)')
     plt.xlabel(xlabel, fontsize=12)
     plt.ylabel(ylabel, fontsize=12)
@@ -67,7 +67,8 @@ def plot_geno_freq(df1, df2, xlabel, ylabel, save_path_img):
     plt.xlim(0, 1)
     plt.ylim(0, 1)
     # plt.savefig(save_path_img, format="png")
-    plt.savefig(save_path_img, format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img+".eps", format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img+".pdf", format='pdf', dpi=600, bbox_inches='tight')
     plt.show()
     
 

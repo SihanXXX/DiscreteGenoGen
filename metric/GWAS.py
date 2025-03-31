@@ -109,7 +109,8 @@ def plot_gwas(geno_df, pheno_array, chrom_dict, save_path_img):
     plt.legend(loc="upper right", fontsize=10)
     plt.tight_layout()
     # plt.savefig(save_path_img, format="png")
-    plt.savefig(save_path_img, format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img+".eps", format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img+".pdf", format='pdf', dpi=600, bbox_inches='tight')
     plt.show()
 
 
@@ -212,7 +213,8 @@ def plot_compare_gwas(geno_df_1, pheno_array_1, geno_df_2, pheno_array_2, chrom_
     # plt.title("Comparison of Two GWAS Results", fontsize=14)
     plt.tight_layout()
     # plt.savefig(save_path_img, format="png")
-    plt.savefig(save_path_img, format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img+".eps", format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img+".pdf", format='pdf', dpi=600, bbox_inches='tight')
     plt.show()
 
     return corr_beta

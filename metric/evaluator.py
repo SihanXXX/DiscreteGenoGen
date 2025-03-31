@@ -42,15 +42,15 @@ def train_evaluator(real, fake, metrics, label1, label2, save_path_img, k=60):
         if metric_name in available_metrics:
             if metric_name == "pca":
                 # pca.geno_PCA(real, fake, label1, label2, save_path_img+"pca.png")
-                pca.geno_PCA(real, fake, label1, label2, save_path_img+"pca.eps")
+                pca.geno_PCA(real, fake, label1, label2, save_path_img+"pca")
             elif metric_name == "fixation_index":
                 results[metric_name] = aggregated_fst(real, fake)
             elif metric_name == "allele_freq":
                 # plot_allele_freq(real, fake, label1, label2, save_path_img+"allele_freq.png")
-                plot_allele_freq(real, fake, label1, label2, save_path_img+"allele_freq.eps")
+                plot_allele_freq(real, fake, label1, label2, save_path_img+"allele_freq")
             elif metric_name == "geno_freq":
                 # plot_geno_freq(real, fake, label1, label2, save_path_img+"geno_freq.png")
-                plot_geno_freq(real, fake, label1, label2, save_path_img+"geno_freq.eps")
+                plot_geno_freq(real, fake, label1, label2, save_path_img+"geno_freq")
             elif metric_name == "precision_recall":
                 precision, recall = get_precision_recall(torch.tensor(real.to_numpy()).to(dtype=torch.float32), torch.tensor(fake.to_numpy()).to(dtype=torch.float32), ks=[k], distance = "euclidean")
                 results["precision"] = precision[0]
