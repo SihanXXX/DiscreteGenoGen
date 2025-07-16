@@ -106,12 +106,9 @@ def plot_aats(aats_scores, label1, label2, save_path):
     plt.xticks(x_positions, labels)
     plt.ylabel('Value')
     plt.ylim(0, 1.1)  # Extend y-axis to accommodate annotations
-    #plt.title('Adversarial Accuracy', fontsize=14)
 
     # Show the plot
     plt.tight_layout()
     plt.legend() 
-    # plt.savefig(save_path, format="png")
-    plt.savefig(save_path+".eps", format='eps', dpi=600, bbox_inches='tight')
     plt.savefig(save_path+".pdf", format='pdf', dpi=600, bbox_inches='tight')
     plt.show()

@@ -2,7 +2,6 @@ import torch
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
 from fst import aggregated_fst
 from allele_freq import plot_allele_freq
 from geno_freq import plot_geno_freq

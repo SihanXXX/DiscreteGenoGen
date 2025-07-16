@@ -34,8 +34,6 @@ def geno_PCA (df1, df2, label1, label2, save_path):
     plt.xlabel('PC1', fontsize=12, color="#000000")
     plt.ylabel('PC2', fontsize=12, color="#000000")
     plt.legend()
-    # plt.savefig(save_path, format="png")
-    plt.savefig(save_path+".eps", format='eps', dpi=600, bbox_inches='tight')
     plt.savefig(save_path+".pdf", format='pdf', dpi=600, bbox_inches='tight')
     plt.show()
 
@@ -75,11 +73,8 @@ def cumu_var (df1, df2, label1, label2, nb_pc, save_path):
     plt.axvline(x=num_pc_df2, color='#6fa84e', linestyle='--', label=f'{num_pc_df2} PCs to reach 80% variance')
     plt.xlabel('Number of PCs', fontsize=12, color="#000000")
     plt.ylabel('Cumulative Explained Variance', fontsize=12, color="#000000")
-    #plt.title('Cumulative Explained Variance by Number of Principal Components')
     plt.legend() 
     plt.grid()
-    # plt.savefig(save_path, format="png")
-    plt.savefig(save_path+".eps", format='eps', dpi=600, bbox_inches='tight')
     plt.savefig(save_path+".pdf", format='pdf', dpi=600, bbox_inches='tight')
     plt.show()
 
@@ -164,8 +159,5 @@ def geno_PCA_32PC (df1, df2, label1, label2, save_path):
                 ax.legend(loc="upper right", fontsize=12)
 
     plt.tight_layout()
-    # plt.savefig(save_path, format="png")
-    plt.savefig(save_path+".eps", format='eps', dpi=600, bbox_inches='tight')
     plt.savefig(save_path+".pdf", format='pdf', dpi=600, bbox_inches='tight')
     plt.show()
-    

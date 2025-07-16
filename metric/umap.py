@@ -33,7 +33,5 @@ def geno_UMAP(df1, df2, label1, label2, save_path):
     plt.xlabel('Component 1', fontsize=12, color="#000000")
     plt.ylabel('Component 2', fontsize=12, color="#000000")
     plt.legend()
-    # plt.savefig(save_path, format="png")
-    plt.savefig(save_path+".eps", format='eps', dpi=600, bbox_inches='tight')
     plt.savefig(save_path+".pdf", format='pdf', dpi=600, bbox_inches='tight')
     plt.show()

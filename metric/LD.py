@@ -24,113 +24,6 @@ def LD(df):
 
     return r, r ** 2, squareform(r ** 2)
 
-'''
-def plot_LD(df1, df2, save_path_img):
-    """
-    Generate a heatmap to compare Linkage Disequilibrium (LD) between two datasets.
-    The lower triangular part of the heatmap represents the LD values from df1, 
-    while the upper triangular part represents the LD values from df2.
-
-    Args:
-        df1 (pd.DataFrame): Genotype matrix where rows represent individuals and columns represent SNPs.
-        df2 (pd.DataFrame): Genotype matrix where rows represent individuals and columns represent SNPs.
-        save_path_img (str): File path to save the generated heatmap as an image.
-
-    Returns:
-        None: Displays the heatmap and saves it to the specified path.
-    """
-    if df1.shape != df2.shape:
-        raise ValueError("Both genotype matrices must have the same shape.")
-
-    # Compute LD matrices
-    _, _, ld_mat1 = LD(df1)
-    _, _, ld_mat2 = LD(df2)
-
-    # Mask matrices
-    mask_upper = np.tril(np.ones_like(ld_mat1, dtype=bool))  # Hide lower
-    mask_lower = np.triu(np.ones_like(ld_mat1, dtype=bool))  # Hide upper
-
-    # define the color
-    custom_blue = LinearSegmentedColormap.from_list(
-        "custom_blue",
-        ["#e1eff8", "#1f77b4"]  # Light blue to original blue
-    )
-    custom_orange = LinearSegmentedColormap.from_list(
-        "custom_orange",
-        ["#ffe6cc", "#ff7f0e"]  # Light orange to original orange
-    )
-
-    # Set up figure
-    plt.figure(figsize=(10, 8))
-
-    # Plot lower triangle (real, df1) in blue
-    sns.heatmap(
-        ld_mat1, mask=mask_upper, cmap=custom_blue, vmin=0, vmax=1,
-        cbar=False, square=True, xticklabels=False, yticklabels=False
-    )
-
-    # Plot upper triangle (fake, df2) in orange
-    sns.heatmap(
-        ld_mat2, mask=mask_lower, cmap=custom_orange, vmin=0, vmax=1,
-        cbar_kws={'label': 'LD'}, square=True,
-        xticklabels=False, yticklabels=False
-    )
-
-    # Save and show
-    plt.tight_layout()
-    plt.savefig(save_path_img + ".pdf", format='pdf', dpi=600, bbox_inches='tight')
-    plt.savefig(save_path_img + ".jpg", format='jpg', dpi=600, bbox_inches='tight')
-    plt.show()   
-
-def plot_LD(df1, df2, label1, label2, save_path_img):
-    """
-    Generate a heatmap to compare Linkage Disequilibrium (LD) between two datasets.
-    The lower triangular part of the heatmap represents the LD values from df1, 
-    while the upper triangular part represents the LD values from df2.
-
-    Args:
-        df1 (pd.DataFrame): Genotype matrix where rows represent individuals and columns represent SNPs.
-        df2 (pd.DataFrame): Genotype matrix where rows represent individuals and columns represent SNPs.
-        save_path_img (str): File path to save the generated heatmap as an image.
-
-    Returns:
-        None: Displays the heatmap and saves it to the specified path.
-    """
-    if df1.shape != df2.shape:
-        raise ValueError("Both genotype matrices must have the same shape.")
-
-    # Compute LD matrices
-    _, _, ld_mat1 = LD(df1)
-    _, _, ld_mat2 = LD(df2)
-    
-    # Initialize the combined LD matrix with zeros
-    combined_LD = np.zeros_like(ld_mat1)
-
-    # Fill lower triangle with ld_mat1 and upper triangle with ld_mat2
-    for i in range(ld_mat1.shape[0]):
-        for j in range(ld_mat1.shape[1]):
-            if i >= j:  # Lower triangle for df1
-                combined_LD[i, j] = ld_mat1[i, j]
-            else:       # Upper triangle for df2
-                combined_LD[i, j] = ld_mat2[i, j]
-
-    # Plot the LD heatmap
-    custom_cmap = sns.light_palette("#008C90", as_cmap=True)
-    plt.figure(figsize=(10, 8))
-    sns.heatmap(
-        combined_LD,
-        annot=False,  # Set True to see correlation values
-        cmap=custom_cmap,
-        vmin=0, vmax=1,
-        cbar_kws={'label': 'LD'})
-    
-    # plt.title("LD Heatmap: Real (below diagonal) vs Fake (above diagonal)")
-    plt.savefig(save_path_img + ".jpg", format='jpg', dpi=600, bbox_inches='tight')
-    plt.savefig(save_path_img+".pdf", format='pdf', dpi=600, bbox_inches='tight')
-    plt.show()
-'''
-
-
 def plot_LD(df1, df2, label1, label2, save_path_img):
     """
     Generate a heatmap to compare Linkage Disequilibrium (LD) between two datasets.
@@ -195,7 +88,6 @@ def plot_LD(df1, df2, label1, label2, save_path_img):
     )
 
     # Save and show
-    plt.savefig(save_path_img + ".jpg", format='jpg', dpi=600, bbox_inches='tight')
     plt.savefig(save_path_img + ".pdf", format='pdf', dpi=600, bbox_inches='tight')
     plt.show()
 
@@ -278,12 +170,9 @@ def plot_LD_decay(df1, df2, positions, distance_threshold, min_dist, max_dist, l
     plt.ylim(0, 1)  # LD values range between 0 and 1
     plt.xlabel('Physical Distance (base pairs)', fontsize=12)
     plt.ylabel('Linkage Disequilibrium (LD)', fontsize=12)
-    #plt.title('LD Decay Analysis', fontsize=14)
     plt.grid(alpha=0.5, linestyle='--')
     plt.legend(fontsize=12, loc='upper center', bbox_to_anchor=(0.5, 0.99), ncol=2, frameon=True)
     plt.tight_layout()
-    # plt.savefig(save_path_img, format="png")
-    plt.savefig(save_path_img + ".jpg", format='jpg', dpi=600, bbox_inches='tight')
     plt.savefig(save_path_img + ".pdf", format='pdf', dpi=600, bbox_inches='tight')
     plt.show()
 

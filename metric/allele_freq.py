@@ -73,9 +73,7 @@ def plot_allele_freq(df1, df2, xlabel, ylabel, save_path_img):
     plt.text(0.95, 0.05, f"Global r = {r:.3f}", fontsize=40, ha='right', va='bottom', transform=plt.gca().transAxes)
 
     # Save the plot to the specified file path
-    # plt.savefig(save_path_img+".eps", format='eps', dpi=600, bbox_inches='tight')
     plt.savefig(save_path_img + ".pdf", format='pdf', dpi=600, bbox_inches='tight')
-    plt.savefig(save_path_img + ".jpg", format='jpg', dpi=600, bbox_inches='tight')
     
     # Display the plot
     plt.show()

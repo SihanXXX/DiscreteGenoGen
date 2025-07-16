@@ -76,9 +76,6 @@ def plot_geno_freq(df1, df2, xlabel, ylabel, save_path_img):
     plt.xlim(0, 1)
     plt.ylim(0, 1)
     plt.text(0.95, 0.05, f"Global r = {r:.3f}", fontsize=40, ha='right', va='bottom', transform=plt.gca().transAxes)
-    # plt.savefig(save_path_img, format="png")
-    # plt.savefig(save_path_img+".eps", format='eps', dpi=600, bbox_inches='tight')
     plt.savefig(save_path_img + ".pdf", format='pdf', dpi=600, bbox_inches='tight')
-    plt.savefig(save_path_img + ".jpg", format='jpg', dpi=600, bbox_inches='tight')
     plt.show()
     
