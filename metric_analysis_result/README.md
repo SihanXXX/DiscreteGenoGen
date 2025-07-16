@@ -1,0 +1,3 @@
+# Generative Models Evaluation Metrics Analysis Results
+
+This analysis applies the **evaluation metrics** in `metric/` to two **real datasets**. The goal is to show that these metrics should ideally reach their best scores when applied to real data. Additionally, the analysis helps identify the optimal hyperparameters for metric computation, such as the **k value** used in precision and recall calculations.
