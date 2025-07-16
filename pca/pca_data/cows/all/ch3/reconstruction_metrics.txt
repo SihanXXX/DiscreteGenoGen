@@ -1,0 +1,5 @@
+Number of Principal Components: 214
+MSE: 0.028905
+RMSE: 0.170016
+MAE: 0.028865
+SNP Matching Accuracy: 97.1155%
