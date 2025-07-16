@@ -5,6 +5,7 @@ from scipy.stats import sem
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
 
 def LD(df):
     """
@@ -22,8 +23,8 @@ def LD(df):
     r = allel.rogers_huff_r(df.values.T)
 
     return r, r ** 2, squareform(r ** 2)
-    
 
+'''
 def plot_LD(df1, df2, save_path_img):
     """
     Generate a heatmap to compare Linkage Disequilibrium (LD) between two datasets.
@@ -38,14 +39,70 @@ def plot_LD(df1, df2, save_path_img):
     Returns:
         None: Displays the heatmap and saves it to the specified path.
     """
-    # Ensure the input dataframes have the same shape
     if df1.shape != df2.shape:
         raise ValueError("Both genotype matrices must have the same shape.")
 
-    # Compute pairwise LD matrices using the provided LD function
-    _,_,ld_mat1 = LD(df1)
-    _,_,ld_mat2 = LD(df2)
+    # Compute LD matrices
+    _, _, ld_mat1 = LD(df1)
+    _, _, ld_mat2 = LD(df2)
 
+    # Mask matrices
+    mask_upper = np.tril(np.ones_like(ld_mat1, dtype=bool))  # Hide lower
+    mask_lower = np.triu(np.ones_like(ld_mat1, dtype=bool))  # Hide upper
+
+    # define the color
+    custom_blue = LinearSegmentedColormap.from_list(
+        "custom_blue",
+        ["#e1eff8", "#1f77b4"]  # Light blue to original blue
+    )
+    custom_orange = LinearSegmentedColormap.from_list(
+        "custom_orange",
+        ["#ffe6cc", "#ff7f0e"]  # Light orange to original orange
+    )
+
+    # Set up figure
+    plt.figure(figsize=(10, 8))
+
+    # Plot lower triangle (real, df1) in blue
+    sns.heatmap(
+        ld_mat1, mask=mask_upper, cmap=custom_blue, vmin=0, vmax=1,
+        cbar=False, square=True, xticklabels=False, yticklabels=False
+    )
+
+    # Plot upper triangle (fake, df2) in orange
+    sns.heatmap(
+        ld_mat2, mask=mask_lower, cmap=custom_orange, vmin=0, vmax=1,
+        cbar_kws={'label': 'LD'}, square=True,
+        xticklabels=False, yticklabels=False
+    )
+
+    # Save and show
+    plt.tight_layout()
+    plt.savefig(save_path_img + ".pdf", format='pdf', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img + ".jpg", format='jpg', dpi=600, bbox_inches='tight')
+    plt.show()   
+
+def plot_LD(df1, df2, label1, label2, save_path_img):
+    """
+    Generate a heatmap to compare Linkage Disequilibrium (LD) between two datasets.
+    The lower triangular part of the heatmap represents the LD values from df1, 
+    while the upper triangular part represents the LD values from df2.
+
+    Args:
+        df1 (pd.DataFrame): Genotype matrix where rows represent individuals and columns represent SNPs.
+        df2 (pd.DataFrame): Genotype matrix where rows represent individuals and columns represent SNPs.
+        save_path_img (str): File path to save the generated heatmap as an image.
+
+    Returns:
+        None: Displays the heatmap and saves it to the specified path.
+    """
+    if df1.shape != df2.shape:
+        raise ValueError("Both genotype matrices must have the same shape.")
+
+    # Compute LD matrices
+    _, _, ld_mat1 = LD(df1)
+    _, _, ld_mat2 = LD(df2)
+    
     # Initialize the combined LD matrix with zeros
     combined_LD = np.zeros_like(ld_mat1)
 
@@ -68,9 +125,78 @@ def plot_LD(df1, df2, save_path_img):
         cbar_kws={'label': 'LD'})
     
     # plt.title("LD Heatmap: Real (below diagonal) vs Fake (above diagonal)")
-    # plt.savefig(save_path_img, format="png")
-    plt.savefig(save_path_img+".eps", format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img + ".jpg", format='jpg', dpi=600, bbox_inches='tight')
     plt.savefig(save_path_img+".pdf", format='pdf', dpi=600, bbox_inches='tight')
+    plt.show()
+'''
+
+
+def plot_LD(df1, df2, label1, label2, save_path_img):
+    """
+    Generate a heatmap to compare Linkage Disequilibrium (LD) between two datasets.
+    The lower triangular part of the heatmap represents the LD values from df1, 
+    while the upper triangular part represents the LD values from df2.
+
+    Args:
+        df1 (pd.DataFrame): Genotype matrix where rows represent individuals and columns represent SNPs.
+        df2 (pd.DataFrame): Genotype matrix where rows represent individuals and columns represent SNPs.
+        label1 (str): Label for the lower triangle (e.g. "Real").
+        label2 (str): Label for the upper triangle (e.g. "Synthetic").
+        save_path_img (str): File path (without extension) to save the heatmap.
+
+    Returns:
+        None
+    """
+    if df1.shape != df2.shape:
+        raise ValueError("Both genotype matrices must have the same shape.")
+
+    import numpy as np
+    import seaborn as sns
+    import matplotlib.pyplot as plt
+
+    # Compute LD matrices
+    _, _, ld_mat1 = LD(df1)
+    _, _, ld_mat2 = LD(df2)
+
+    # Initialize the combined LD matrix
+    combined_LD = np.zeros_like(ld_mat1)
+
+    # Fill lower triangle with ld_mat1 and upper triangle with ld_mat2
+    for i in range(ld_mat1.shape[0]):
+        for j in range(ld_mat1.shape[1]):
+            combined_LD[i, j] = ld_mat1[i, j] if i >= j else ld_mat2[i, j]
+
+    # Plot the LD heatmap
+    custom_cmap = sns.light_palette("#008C90", as_cmap=True)
+    plt.figure(figsize=(10, 8))
+    ax = sns.heatmap(
+        combined_LD,
+        annot=False,
+        cmap=custom_cmap,
+        vmin=0, vmax=1,
+        cbar_kws={'label': 'LD'}
+    )
+
+    # Add corner labels
+    n = combined_LD.shape[0]
+    plt.text(
+        x=1, y=n - 1.5,
+        s=label1,
+        color="#0047AB",
+        fontsize=20,
+        ha='left', va='bottom'
+    )
+    plt.text(
+        x=n - 2, y=1.5,
+        s=label2,
+        color="#355E3B",
+        fontsize=20,
+        ha='right', va='top'
+    )
+
+    # Save and show
+    plt.savefig(save_path_img + ".jpg", format='jpg', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img + ".pdf", format='pdf', dpi=600, bbox_inches='tight')
     plt.show()
 
 
@@ -117,7 +243,7 @@ def plot_LD_decay(df1, df2, positions, distance_threshold, min_dist, max_dist, l
     valid_mask_2 = ~np.isnan(filtered_ld_2)
     filtered_distances_2 = filtered_distances[valid_mask_2]
     filtered_ld_2 = filtered_ld_2[valid_mask_2]
-
+    
     # Plot the scatter plot
     plt.figure(figsize=(10, 8))
 
@@ -127,7 +253,7 @@ def plot_LD_decay(df1, df2, positions, distance_threshold, min_dist, max_dist, l
     # Plot for df1
     bin_means_1, bin_edges_1, _ = binned_statistic(filtered_distances_1, filtered_ld_1, statistic='mean', bins=bins)
     # Scatter plot
-    plt.scatter(filtered_distances_1, filtered_ld_1, alpha=0.2, color='#1f77b4', label=label1, s=10)
+    # plt.scatter(filtered_distances_1, filtered_ld_1, alpha=0.2, color='#1f77b4', label=label1, s=10)
     # Add a line for binned means
     bin_centers_1 = 0.5 * (bin_edges_1[:-1] + bin_edges_1[1:])
     plt.plot(bin_centers_1, bin_means_1, color='#1f77b4', linewidth=2, label='Mean LD for ' + label1)
@@ -138,7 +264,7 @@ def plot_LD_decay(df1, df2, positions, distance_threshold, min_dist, max_dist, l
     # Plot for df2
     bin_means_2, bin_edges_2, _ = binned_statistic(filtered_distances_2, filtered_ld_2, statistic='mean', bins=bins)
     # Scatter plot
-    plt.scatter(filtered_distances_2, filtered_ld_2, alpha=0.2, color='#ff7f0e', label=label2, s=10)
+    # plt.scatter(filtered_distances_2, filtered_ld_2, alpha=0.2, color='#ff7f0e', label=label2, s=10)
     # Add a line for binned means
     bin_centers_2 = 0.5 * (bin_edges_2[:-1] + bin_edges_2[1:])
     plt.plot(bin_centers_2, bin_means_2, color='#ff7f0e', linewidth=2, label='Mean LD for ' + label2)
@@ -157,8 +283,8 @@ def plot_LD_decay(df1, df2, positions, distance_threshold, min_dist, max_dist, l
     plt.legend(fontsize=12, loc='upper center', bbox_to_anchor=(0.5, 0.99), ncol=2, frameon=True)
     plt.tight_layout()
     # plt.savefig(save_path_img, format="png")
-    plt.savefig(save_path_img+".eps", format='eps', dpi=600, bbox_inches='tight')
-    plt.savefig(save_path_img+".pdf", format='pdf', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img + ".jpg", format='jpg', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img + ".pdf", format='pdf', dpi=600, bbox_inches='tight')
     plt.show()
 
 

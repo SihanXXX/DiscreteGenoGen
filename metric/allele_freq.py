@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+from scipy.stats import pearsonr
+import numpy as np
 
 def allele_freq(df):
     """
@@ -47,6 +49,13 @@ def plot_allele_freq(df1, df2, xlabel, ylabel, save_path_img):
     # Compute MAF
     maf1 = allele_freq(df1)
     maf2 = allele_freq(df2)
+
+    # Convert to numpy arrays
+    array_maf1 = np.array(maf1.tolist())
+    array_maf2 = np.array(maf2.tolist())
+    # Calculate Pearson correlation
+    r, _ = pearsonr(array_maf1, array_maf2)
+    
     # Scatter plot for the SNP
     plt.scatter(maf1.tolist(), maf2.tolist(), color="#008C90", alpha=0.8)
 
@@ -54,7 +63,6 @@ def plot_allele_freq(df1, df2, xlabel, ylabel, save_path_img):
     plt.plot([0, 1], [0, 1], 'r--', color="#FF6F43", label='y = x (Ideal Match)')
     
     # Add title, labels, legend, and grid
-    # plt.title('Allele Frequency Comparison', fontsize=14, fontweight='bold')
     plt.xlabel(xlabel, fontsize=12)
     plt.ylabel(ylabel, fontsize=12)
     plt.legend(fontsize=10)
@@ -62,11 +70,12 @@ def plot_allele_freq(df1, df2, xlabel, ylabel, save_path_img):
     # Set axis limits for allele frequency range
     plt.xlim(0, 1)
     plt.ylim(0, 1)
-    
+    plt.text(0.95, 0.05, f"Global r = {r:.3f}", fontsize=40, ha='right', va='bottom', transform=plt.gca().transAxes)
+
     # Save the plot to the specified file path
-    # plt.savefig(save_path_img, format="png")
-    plt.savefig(save_path_img+".eps", format='eps', dpi=600, bbox_inches='tight')
-    plt.savefig(save_path_img+".pdf", format='pdf', dpi=600, bbox_inches='tight')
+    # plt.savefig(save_path_img+".eps", format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img + ".pdf", format='pdf', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img + ".jpg", format='jpg', dpi=600, bbox_inches='tight')
     
     # Display the plot
     plt.show()

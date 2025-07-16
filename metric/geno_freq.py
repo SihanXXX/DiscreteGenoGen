@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+from scipy.stats import pearsonr
+import numpy as np
 
 def compute_homozygosity_rate(df, allel = 'alternative'):
     """
@@ -55,6 +57,13 @@ def plot_geno_freq(df1, df2, xlabel, ylabel, save_path_img):
     df1_het = compute_heterozygosity_rate(df1)
     df2_het = compute_heterozygosity_rate(df2)
 
+    # Concatenate all frequency vectors
+    all_df1 = np.concatenate([df1_het, df1_homo_alter, df1_homo_ref])
+    all_df2 = np.concatenate([df2_het, df2_homo_alter, df2_homo_ref])
+
+    # Compute global Pearson correlation
+    r, _ = pearsonr(all_df1, all_df2)
+
     # Scatter plot
     plt.figure(figsize=(10, 8))
     plt.scatter(df1_het, df2_het, alpha=0.4, color="#008C90", label="Heterozygosity Rate")
@@ -66,14 +75,10 @@ def plot_geno_freq(df1, df2, xlabel, ylabel, save_path_img):
     plt.legend(fontsize=10)
     plt.xlim(0, 1)
     plt.ylim(0, 1)
+    plt.text(0.95, 0.05, f"Global r = {r:.3f}", fontsize=40, ha='right', va='bottom', transform=plt.gca().transAxes)
     # plt.savefig(save_path_img, format="png")
-    plt.savefig(save_path_img+".eps", format='eps', dpi=600, bbox_inches='tight')
-    plt.savefig(save_path_img+".pdf", format='pdf', dpi=600, bbox_inches='tight')
+    # plt.savefig(save_path_img+".eps", format='eps', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img + ".pdf", format='pdf', dpi=600, bbox_inches='tight')
+    plt.savefig(save_path_img + ".jpg", format='jpg', dpi=600, bbox_inches='tight')
     plt.show()
-    
-
-
-
-
-
     

@@ -130,6 +130,11 @@ def geno_PCA_32PC (df1, df2, label1, label2, save_path):
     df1_pca = combined_pca[:n_df1, :]
     df2_pca = combined_pca[n_df1:, :]
 
+    # Explained variance
+    explained_variance = pca.explained_variance_ratio_
+    cumulative_variance = np.sum(explained_variance)
+    print(f"Cumulative variance explained by the first 32 PCs: {cumulative_variance:.4f} ({cumulative_variance*100:.2f}%)")
+
     # Create a 4x4 grid for plotting
     fig, axes = plt.subplots(4, 4, figsize=(16, 16))
 
