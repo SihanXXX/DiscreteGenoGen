@@ -31,5 +31,6 @@ This project implements several deep generative models—including Variational A
 ├── metric_analysis_result/ # Analysis results of metric behavior and robustness
 ├── model/                  # Model architectures and training code
 ├── pca/                    # PCA results used as latent representation for diffusion models
+├── pheno_prediction/       # Predictive Models for Genotype-to-Phenotype Prediction
 ├── GenSNP_schema.png      
 └── README.md               
