@@ -13,5 +13,14 @@ To run the `cow_geno_pheno_pred_xgb.py` script:
 python cow_geno_pheno_pred_xgb.py \
   --data_path "path/to/data_folder" \
   --result_file "path/to/result_file.txt"
+```
+
+To run the `cow_geno_pheno_pred_mlp.py` script:
+
+```bash
+python cow_geno_pheno_pred_mlp.py \
+  --data_path "path/to/data_folder" \
+  --result_file "path/to/result_file.txt"
+```
 
 , where in the "data_folder_path", you should have real.parquet(real genotype training dataset), syn.parquet(synthetic genotype training dataset), pheno.parquet(phenotype training dataset), val.parquet(genotype validation dataset), val_pheno.parquet(phenotype validation dataset), test.parquet(genotype test dataset), test_pheno.parquet(phenotype test dataset).
