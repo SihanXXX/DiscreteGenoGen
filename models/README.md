@@ -18,7 +18,7 @@ This repository is organized into four submodules, each corresponding to a diffe
 
 Each subdirectory contains:
 
-- `model.py`  
+- `{model_type}_model.py`  
   Defines the architecture of the corresponding generative model.
 
 - `configs.py`  
