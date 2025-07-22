@@ -16,7 +16,7 @@ import torch.autograd as autograd
 import torch.nn.utils.spectral_norm as SN
 from torch.utils.data import Dataset, DataLoader, TensorDataset
 import matplotlib.pyplot as plt
-from model import VAE 
+from vae_model import VAE 
 
 # Get the absolute path to the metric directory
 current_file_path = os.path.abspath(__file__)
