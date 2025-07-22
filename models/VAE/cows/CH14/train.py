@@ -57,7 +57,7 @@ def vae_loss(logits, x_int, mu, logvar):
 
 
 # Load Configuration
-from configs import (
+from vae_cow_ch14_configs import (
     sequence_length,
     batch_size,
     learning_rate,

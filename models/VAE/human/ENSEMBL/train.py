@@ -56,7 +56,7 @@ def vae_loss(logits, x_int, mu, logvar):
     return reconstruction_loss + kl_loss
 
 # Load Configuration
-from configs import (
+from vae_human_en_configs import (
     sequence_length,
     batch_size,
     learning_rate,

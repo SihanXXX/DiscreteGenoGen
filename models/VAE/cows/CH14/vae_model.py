@@ -9,7 +9,7 @@ import torch.autograd as autograd
 import torch.nn.utils.spectral_norm as SN
 
 # Load Configuration
-from configs import (
+from vae_cow_ch14_configs import (
     device
 )
 
