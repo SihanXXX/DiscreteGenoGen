@@ -2,7 +2,6 @@
 
 This repository accompanies the paper:  
 **_Deep Generative Models for Synthetic Discrete Genotype Simulation_**  
-by **Sihan Xie**
 
 ## 🔍 Overview
 
@@ -30,7 +29,7 @@ This project implements several deep generative models—including Variational A
 ├── metadata/               # SNP informations and phenotype example
 ├── metric/                 # Implementation of evaluation metrics for synthetic genotype data
 ├── metric_analysis_result/ # Analysis results of metric behavior and robustness
-├── model/                  # Model architectures and training code
+├── models/                  # Model architectures and training code
 ├── pca/                    # PCA results used as latent representation for diffusion models
 ├── pheno_prediction/       # Predictive Models for Genotype-to-Phenotype Prediction
 ├── GenSNP_schema.png      
