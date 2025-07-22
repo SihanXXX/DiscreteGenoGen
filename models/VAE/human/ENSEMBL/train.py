@@ -55,7 +55,6 @@ def vae_loss(logits, x_int, mu, logvar):
     
     return reconstruction_loss + kl_loss
 
-
 # Load Configuration
 from configs import (
     sequence_length,
@@ -73,13 +72,11 @@ from configs import (
 parser = argparse.ArgumentParser(description="Train VAE model on genotype data")
 parser.add_argument('--data_path', type=str, required=True, help='Path to training data folder')
 args = parser.parse_args()
-
 # Use the parsed arguments
 data_path = args.data_path
-
-bov_ch14 = pd.read_parquet(data_path + "train.parquet")
-val_bov_ch14 = pd.read_parquet(data_path + "val.parquet")
-geno_tensor = torch.tensor(bov_ch14.values).long()
+RG = pd.read_parquet(data_path + "train.parquet")
+val_RG = pd.read_parquet(data_path + "val.parquet")
+geno_tensor = torch.tensor(RG.values).long()
 geno_dataset = TensorDataset(geno_tensor)
 train_dataloader = DataLoader(geno_dataset, batch_size=batch_size, shuffle=True, pin_memory=True)
 
@@ -108,7 +105,6 @@ if not os.path.exists(checkpoint_dir):
     os.makedirs(checkpoint_dir, exist_ok=True)
     print("Checkpoint Directory for current experiment '%s' created" % checkpoint_dir)
 
-# Training 
 for epoch in range(num_epochs):
     model.train()
     epoch_loss = 0.0
@@ -135,12 +131,11 @@ for epoch in range(num_epochs):
     if (epoch+1)%step == 0:
         metric_dir = os.path.join(log_dir, str(epoch+1))
         os.makedirs(metric_dir, exist_ok=True)
-        fake_geno = pd.DataFrame(model.generate(val_bov_ch14.shape[0]), columns=val_bov_ch14.columns, dtype=float)
-        metrics_result = train_evaluator(val_bov_ch14, fake_geno, ["precision_recall","fixation_index","pca","allele_freq","geno_freq"], "real", "syn", metric_dir+"/")
+        fake_geno = pd.DataFrame(model.generate(val_RG.shape[0]), columns=val_RG.columns, dtype=float)
+        metrics_result = train_evaluator(val_RG, fake_geno, ["precision_recall","fixation_index","pca","allele_freq","geno_freq"], "real", "syn", metric_dir+"/")
         # Write metric
         with open(other_metrics_file, "a") as f:
             f.write(f"{epoch+1}\t{metrics_result['precision']:.4f}\t{metrics_result['recall']:.4f}\t{metrics_result['fixation_index']:.4f}\n")
-        
                         
         gen_path = os.path.join(checkpoint_dir, f"epoch_{epoch + 1}.pth")
         torch.save(model.decoder.state_dict(), gen_path)
