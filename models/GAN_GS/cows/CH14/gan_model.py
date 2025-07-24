@@ -372,7 +372,7 @@ class GAN(object):
 
                 total_loss_gen += gen_loss.detach().item()
 
-            # Pring and save all losses for each epoch
+            # Print and save all losses for each epoch
             epoch_disc = total_loss_disc/num_batches
             epoch_gen = total_loss_gen/num_batches
 
