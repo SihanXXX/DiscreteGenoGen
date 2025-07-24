@@ -499,7 +499,7 @@ class WGAN_GP(object):
 
                 total_loss_gen += gen_loss.detach().item()
 
-            # Pring and save all losses for each epoch
+            # Print and save all losses for each epoch
             epoch_crit = total_loss_critic/num_batches
             epoch_gen = total_loss_gen/num_batches
             epoch_gp = total_gp/num_batches
