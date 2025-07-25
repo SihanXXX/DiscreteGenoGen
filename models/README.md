@@ -21,7 +21,7 @@ Each subdirectory contains:
 - `{model_type}_model.py`  
   Defines the architecture of the corresponding generative model.
 
-- `configs.py`  
+- `{model_type}_{dataset}_configs.py`  
   Contains the best hyperparameter configuration identified during our experiments.
 
 - `train.py`  

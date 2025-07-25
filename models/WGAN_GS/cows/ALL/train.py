@@ -40,6 +40,7 @@ class GenotypeDataset(Dataset):
     Customized Dataset to load SNP genotypes and a trait
     """
     def __init__(self, data_path: str, type: str = "train", inject_noise: bool = True):
+        slef.data_path = data_path
         self.type = type
         self.inject_noise = inject_noise
         # Preprocess genotype data

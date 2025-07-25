@@ -6,7 +6,7 @@ python train.py --data_path "/path/to/data/"
 
 , where data_path directory must contain:
 
-- `train.parquet`: Training genotype ataset
+- `train.parquet`: Training genotype dataset
 - `pheno.parquet`: Phenotype labels corresponding to the training set
 - `val.parquet`: Validation genotype dataset
 - `val_pheno.parquet`: Phenotype labels corresponding to the validation set
