@@ -6,4 +6,4 @@ This repository provides simple and easy-to-follow Jupyter notebooks that demons
 - **Generate synthetic genotype data** using the loaded model.
 - **Evaluate the synthetic data** by computing evaluation metrics from the [metric](../metric) repository.
 
-This demo is designed to help users partially reproduce the results of our experiments.
+This demo is designed to help others partially reproduce the results of our experiments.
