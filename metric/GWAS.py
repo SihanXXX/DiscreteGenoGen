@@ -193,8 +193,10 @@ def plot_compare_gwas(geno_df_1, pheno_array_1, geno_df_2, pheno_array_2, chrom_
     plt.axhline(y=-threshold, color='#e377c2', linestyle='--', linewidth=0.8)
 
     # Add population labels
-    plt.text(0, max(log_p_values_1) * 0.98, label1, fontsize=16, weight='bold', color="#0047AB")
-    plt.text(0, -max(log_p_values_2) * 0.98, label2, fontsize=16, weight='bold', color="#355E3B")
+    max_logp1 = np.nanmax(log_p_values_1[np.isfinite(log_p_values_1)])
+    max_logp2 = np.nanmax(log_p_values_2[np.isfinite(log_p_values_2)])
+    plt.text(0, max_logp1 * 0.98, label1, fontsize=16, weight='bold', color="#0047AB")
+    plt.text(0, -max_logp2 * 0.98, label2, fontsize=16, weight='bold', color="#355E3B")
     
     # Beautify the plot
     plt.xticks(x_ticks, x_labels, rotation=90)

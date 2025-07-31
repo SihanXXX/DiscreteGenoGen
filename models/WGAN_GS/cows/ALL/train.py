@@ -22,7 +22,7 @@ np.random.seed(42)
 random.seed(42)
 
 # Load Configuration
-from wgan_cow_all_configs import (CONFIG_WGAN_COW_ALL,device)
+from wgan_cow_all_configs import (CONFIG_WGAN_COW_ALL,device_wgan)
 
 # Load Data
 parser = argparse.ArgumentParser(description="Train WGAN model on genotype data")
@@ -85,7 +85,7 @@ data = GenotypeDataset(data_path)
 train_dataloader = DataLoader(data, batch_size=CONFIG_WGAN_COW_ALL['batch_size'], shuffle=True, pin_memory=True)   
 
 # Load Model
-model = WGAN_GP(CONFIG_WGAN_COW_ALL, device)
+model = WGAN_GP(CONFIG_WGAN_COW_ALL, device_wgan)
 
 # Train Model
-model.train(train_dataloader,val_RG,val_pheno_tensor.to(device),CONFIG_WGAN_COW_ALL['latent_dim'], CONFIG_WGAN_COW_ALL['epochs'],initial_temp=CONFIG_WGAN_COW_ALL['init_temp'],final_temp=CONFIG_WGAN_COW_ALL['final_temp'],step=CONFIG_WGAN_COW_ALL['step'])
+model.train(train_dataloader,val_RG,val_pheno_tensor.to(device_wgan),CONFIG_WGAN_COW_ALL['latent_dim'], CONFIG_WGAN_COW_ALL['epochs'],initial_temp=CONFIG_WGAN_COW_ALL['init_temp'],final_temp=CONFIG_WGAN_COW_ALL['final_temp'],step=CONFIG_WGAN_COW_ALL['step'])

@@ -40,4 +40,4 @@ CONFIG_WGAN_COW_ALL['init_temp'] = 1
 CONFIG_WGAN_COW_ALL['final_temp'] = 0.1
 
 # Device
-device = torch.device("cuda:0")
+device_wgan = torch.device("cuda:0")

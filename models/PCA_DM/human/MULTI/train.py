@@ -35,18 +35,32 @@ if metric_dir not in sys.path:
 from evaluator import train_evaluator
 
 # Load Configuration
-from dm_human_en_configs import (CONFIG_DM_HUMAN_EN,device_dm)
+from dm_human_multi_configs import (CONFIG_DM_HUMAN_MULTI,device_dm)
 
 # Function to generate the latent representation then reconstruct the genotype
-def generate_reconstruct(diffusion_model, sex_tensor, height_tensor, pca_components, pca_mean):
+def generate_reconstruct(diffusion_model, sex_tensor, height_tensor):
+    # Reconstruction from PCA space to the original data space
+    all_reconstructed_data = np.empty((sex_tensor.shape[0], 0))
+    dims = [6104, 5149, 4438, 3078]
+    cumdims = np.cumsum(dims)  # This gives [6104, 11253, 15691, 18769]
+    start_indices = np.insert(cumdims, 0, 0)[:-1]  # This gives [0, 6104, 11253, 15691]
+    # Generate genotype data in latent space
     diffusion_model.eval()
     with torch.no_grad():
         AG_PCA = np.array(diffusion_model.sample(sex_tensor.shape[0], sex_tensor, height_tensor).cpu())
+    AG_PCA_slices = [AG_PCA[:, start:stop] for start, stop in zip(start_indices, cumdims)]
 
-    AG = np.dot(AG_PCA, pca_components) + pca_mean
-    AG = np.rint(AG).clip(0, 2)  
-        
-    return AG
+    cpt = 1
+    for chr in [3,6,12,17]:
+        result_folder = "../../../../pca/pca_data/ukb/multi/ch"+str(chr) # path where the pca component and mean are stored
+        pca_components = np.load(result_folder + "/pca_components.npy")
+        pca_mean = np.load(result_folder + "/pca_mean.npy")
+        reconstructed_data = np.dot(AG_PCA_slices[cpt-1], pca_components) + pca_mean
+        reconstructed_data = np.rint(reconstructed_data).clip(0, 2)  
+        all_reconstructed_data = np.concatenate((all_reconstructed_data, reconstructed_data), axis=1)
+        cpt = cpt + 1
+    
+    return all_reconstructed_data
 
 # Customized Dataset Class
 class SNPPCADataset(Dataset):
@@ -88,12 +102,12 @@ pca_components = np.load("../../../../pca_data/human/ENSEMBL/var0.9/pca_componen
 pca_mean = np.load("../../../../pca_data/human/ENSEMBL/var0.9/pca_mean.npy")
 
 train_dataset = SNPPCADataset(train_data, pheno_train)
-train_dataloader = DataLoader(train_dataset, batch_size=CONFIG_DM_HUMAN_EN["batch_size"], shuffle=True, pin_memory=True)
+train_dataloader = DataLoader(train_dataset, batch_size=CONFIG_DM_HUMAN_MULTI["batch_size"], shuffle=True, pin_memory=True)
 
 # Configuration
 num_batches = len(train_dataloader)
-total_steps = CONFIG_DM_HUMAN_EN["num_epochs"] * num_batches
-CONFIG_DM_HUMAN_EN["total_steps_lr_schedule"] = total_steps - CONFIG_DM_HUMAN_EN["warmup_period"]
+total_steps = CONFIG_DM_HUMAN_MULTI["num_epochs"] * num_batches
+CONFIG_DM_HUMAN_MULTI["total_steps_lr_schedule"] = total_steps - CONFIG_DM_HUMAN_MULTI["warmup_period"]
 
 # Log
 log_dir = './logs'
@@ -116,18 +130,18 @@ if not os.path.exists(checkpoint_dir):
     print("Checkpoint Directory for current experiment '%s' created" % checkpoint_dir)
 
 # Create Models
-diffusion_process = GaussianDiffusion(num_diffusion_timesteps=CONFIG_DM_HUMAN_EN["num_timesteps"], device = device_dm)
+diffusion_process = GaussianDiffusion(num_diffusion_timesteps=CONFIG_DM_HUMAN_MULTI["num_timesteps"], device = device_dm)
 time_sampler = TimeSampler(diffusion_process.tmin, diffusion_process.tmax)
-noise_predictor = NoisePredictor(CONFIG_DM_HUMAN_EN["snp_dim"], CONFIG_DM_HUMAN_EN["time_embedding_dim"], CONFIG_DM_HUMAN_EN["sex_embedding_dim"], CONFIG_DM_HUMAN_EN["height_embedding_dim"],CONFIG_DM_HUMAN_EN["hidden_dim_1"],CONFIG_DM_HUMAN_EN["hidden_dim_2"],CONFIG_DM_HUMAN_EN["hidden_dim_3"],CONFIG_DM_HUMAN_EN["num_timesteps"]).to(device_dm)
-model = DDPM(CONFIG_DM_HUMAN_EN["snp_dim"], diffusion_process, time_sampler, noise_predictor).to(device_dm)
+noise_predictor = NoisePredictor(CONFIG_DM_HUMAN_MULTI["snp_dim"], CONFIG_DM_HUMAN_MULTI["time_embedding_dim"], CONFIG_DM_HUMAN_MULTI["sex_embedding_dim"], CONFIG_DM_HUMAN_MULTI["height_embedding_dim"],CONFIG_DM_HUMAN_MULTI["hidden_dim_1"],CONFIG_DM_HUMAN_MULTI["hidden_dim_2"],CONFIG_DM_HUMAN_MULTI["hidden_dim_3"],CONFIG_DM_HUMAN_MULTI["num_timesteps"]).to(device_dm)
+model = DDPM(CONFIG_DM_HUMAN_MULTI["snp_dim"], diffusion_process, time_sampler, noise_predictor).to(device_dm)
 # Optimizer
-optimizer = optim.Adam(model.parameters(), lr=CONFIG_DM_HUMAN_EN["optim_lr"])
+optimizer = optim.Adam(model.parameters(), lr=CONFIG_DM_HUMAN_MULTI["optim_lr"])
 # Use a cosine annealing scheduler with warm restarts.
-lr_scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=CONFIG_DM_HUMAN_EN["total_steps_lr_schedule"], eta_min=CONFIG_DM_HUMAN_EN["optim_lr_min"])
-warmup_scheduler = warmup.LinearWarmup(optimizer, CONFIG_DM_HUMAN_EN["warmup_period"])
+lr_scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=CONFIG_DM_HUMAN_MULTI["total_steps_lr_schedule"], eta_min=CONFIG_DM_HUMAN_MULTI["optim_lr_min"])
+warmup_scheduler = warmup.LinearWarmup(optimizer, CONFIG_DM_HUMAN_MULTI["warmup_period"])
 
 best_f1 = 0.0
-for epoch in range(CONFIG_DM_HUMAN_EN["num_epochs"]):
+for epoch in range(CONFIG_DM_HUMAN_MULTI["num_epochs"]):
     model.train()
     epoch_loss = 0.0    
     for batch_idx, (geno, sex, height) in enumerate(train_dataloader):
@@ -142,7 +156,7 @@ for epoch in range(CONFIG_DM_HUMAN_EN["num_epochs"]):
         epoch_loss += loss.item()
 
         with warmup_scheduler.dampening():
-            if warmup_scheduler.last_step + 1 >= CONFIG_DM_HUMAN_EN["warmup_period"]:
+            if warmup_scheduler.last_step + 1 >= CONFIG_DM_HUMAN_MULTI["warmup_period"]:
                 lr_scheduler.step()
     
     avg_loss = epoch_loss / num_batches
@@ -151,11 +165,11 @@ for epoch in range(CONFIG_DM_HUMAN_EN["num_epochs"]):
     with open(log_file, "a") as f:
         f.write(f"{epoch+1},{avg_loss:.6f},{current_lr:.6e}\n")
     
-    if (epoch + 1) % CONFIG_DM_HUMAN_EN["checkpoint"] == 0:
+    if (epoch + 1) % CONFIG_DM_HUMAN_MULTI["checkpoint"] == 0:
         # generate AGs and compute the metrics
         metric_dir = os.path.join(log_dir, str(epoch+1))
         os.makedirs(metric_dir, exist_ok=True)
-        fake_geno = pd.DataFrame(generate_reconstruct(model, val_sex.to(device_dm), val_height.to(device_dm), pca_components, pca_mean), columns=val_RG.columns, dtype=float)
+        fake_geno = pd.DataFrame(generate_reconstruct(model, val_sex.to(device_dm), val_height.to(device_dm)), columns=val_RG.columns, dtype=float)
         metrics_result = train_evaluator(val_RG, fake_geno, ["precision_recall","fixation_index","pca","geno_freq"], "real", "syn", metric_dir+"/")
         if (metrics_result['precision'] + metrics_result['recall']) != 0:
             f1_score = 2 * (metrics_result['precision'] * metrics_result['recall']) / (metrics_result['precision'] + metrics_result['recall'])
@@ -170,8 +184,9 @@ for epoch in range(CONFIG_DM_HUMAN_EN["num_epochs"]):
             model_path = os.path.join(checkpoint_dir, "best_model.pth")
             torch.save(model.state_dict(), model_path)
             print(f"New best model saved at epoch {epoch+1} with F1 score {f1_score:.6f}")
+            
     # Also save the final model 
-    if (epoch + 1) == CONFIG_DM_HUMAN_EN["num_epochs"]:
+    if (epoch + 1) == CONFIG_DM_HUMAN_MULTI["num_epochs"]:
         model_path = os.path.join(checkpoint_dir, "final_model.pth")
         torch.save(model.state_dict(), model_path)
         print(f"Model saved at final epoch.")

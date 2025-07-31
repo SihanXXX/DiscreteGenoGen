@@ -1,6 +1,6 @@
 # Generative Models for Synthetic Genotype Simulation
 
-This repository contains code for four generative models used to generate synthetic genotype data: **VAE**, **GAN+GumbelSoftmax**, **WGAN+GumbelSoftmax**, and **PCA+Diffusion**. Each subrepository provides:
+This repository contains code for four generative models used to generate synthetic genotype data: **VAE**, **GAN+GumbelSoftmax**, **WGAN+GumbelSoftmax**, and **PCA+Diffusion**. We provides:
 - **Model Architecture**: The code for building the respective generative model.
 - **Model Configuration**: The best params configuration for dataset.
 - **Model Training**: The training procedure for each model.
