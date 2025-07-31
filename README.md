@@ -39,7 +39,7 @@ This project implements several deep generative models—including Variational A
    
 3. We strongly recommend you starting with the notebooks in the [demo](./demo) folder. These allow you to use pre-trained generative models to simulate genotype data and compute evaluation metrics.
 
-4. Once you have generated synthetic genotype data in step 3, you can try to train generative models from scratch using the corresponding scripts in the [models](./models) directory.
+4. Once you have generated synthetic genotype data, you can try to train generative models from scratch using the corresponding scripts in the [models](./models) directory.
 
 
 ## 📦 Repository Structure
