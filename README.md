@@ -53,6 +53,7 @@ This project implements several deep generative models—including Variational A
 ├── models/                 # Model architectures and training code
 ├── pca/                    # PCA results used as latent representation for diffusion models
 ├── pheno_prediction/       # Predictive Models for Genotype-to-Phenotype Prediction
-├── GenSNP_schema.png      
-└── README.md    
-└── requirements.txt    
+├── GenSNP_schema.png   
+├── LICENSE
+├── README.md    
+├── requirements.txt    
