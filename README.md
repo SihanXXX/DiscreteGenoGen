@@ -1,7 +1,7 @@
 # Deep Generative Models for Synthetic Discrete Genotype Simulation
 
 This repository accompanies the paper:  
-**_Deep Generative Models for Synthetic Discrete Genotype Simulation_**  
+**_Deep Generative Models for Discrete Genotype Simulation_**  
 
 
 ## 🔍 Overview
