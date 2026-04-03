@@ -47,6 +47,7 @@ This project implements several deep generative models—including Variational A
 ```bash
 .
 ├── demo/                   # Demo notebooks to replicate our experiments result (recommended starting point)
+├── figure_data/            # Intermediate data used to generate the figures in the manuscript
 ├── metadata/               # SNP informations and phenotype example
 ├── metric/                 # Implementation of evaluation metrics for synthetic genotype data
 ├── metric_analysis_result/ # Analysis results of metric behavior and robustness
